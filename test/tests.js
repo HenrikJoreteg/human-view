@@ -218,6 +218,42 @@ test('registerSubview', function () {
     equal(removeCalled, 4);
 });
 
+test('registerSubview duplicate', function () {
+    var removeCalled = 0;
+    var SubView = HumanView.extend({
+        render: function () {
+            this.$el.addClass('subview');
+        },
+        remove: function () {
+            removeCalled++;
+        }
+    });
+    var View = HumanView.extend({
+        render: function () {
+            var subView = new SubView();
+            this.$el.empty();
+            this.$el.html('<div id="parent"></div>');
+            //Duplicates shouldn't cause duplicate removes
+            this.renderSubview(subView, '#parent');
+            this.renderSubview(subView, '#parent');
+
+            // some other thing with a remove method
+            this.registerSubview({remove: function () {
+                removeCalled++;
+            }});
+        }
+    });
+
+    var main = new View({
+        el: container[0]
+    });
+
+    main.render();
+    equal(main.$('.subview').length, 1);
+    main.remove();
+    equal(removeCalled, 2);
+});
+
 
 module('method: listenToAndRun');
 asyncTest('basic', 1, function () {
