@@ -253,8 +253,8 @@
             views.push(view);
             view.parent = self;
             view.renderedByParentView = true;
-            view.render({containerEl: container});
           }
+          view.render({containerEl: container});
           // give the option for the view to choose where it's inserted if you so choose
           if (!view.insertSelf) containerEl[options.reverse ? 'prepend' : 'append'](view.el);
           view.delegateEvents();
