@@ -269,7 +269,9 @@
         _.each(childNodes, function (child) {
           parent.removeChild(child);
         });
-        collection.each(addView);
+        collection.each(function (model) {
+          addView(model, collection);
+        });
       }
       this.listenTo(collection, 'add', addView);
       this.listenTo(collection, 'remove', function (model) {
