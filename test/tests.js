@@ -107,6 +107,22 @@ test('test initial render', function() {
     equal(numberRendered(), collection.length);
     ok(itemsHaveChildren());
 });
+test('has collection property', function() {
+    window.view.render();
+    var collectionViews = window.view._subviews[0];
+    var oks = _.compact(_.map(collectionViews, function (cv) {
+        return cv.collection === collection;
+    }));
+    ok(collectionViews.length === oks.length);
+});
+test('has model property', function() {
+    window.view.render();
+    var collectionViews = window.view._subviews[0];
+    var oks = _.compact(_.map(collectionViews, function (cv, index) {
+        return cv.model === collection.at(index);
+    }));
+    ok(collectionViews.length === oks.length);
+});
 test('add', function() {
     window.view.render();
     addModel();
