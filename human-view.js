@@ -2,6 +2,7 @@
 (function () {
   "use strict";
   var Backbone, _;
+  var slice = Array.prototype.slice;
 
   if (typeof require !== 'undefined') {
     Backbone = require('backbone');
@@ -87,7 +88,8 @@
             }
           }();
           func = function () {
-            var el = (selector.length > 0) ? self.$(selector) : $(self.el);
+            var el = self.getMatches(self.el, selector);
+
             if (attrName) {
               el.attr(attrName, model.get(key));
             } else {
@@ -105,7 +107,7 @@
         var func = function () {
           var newVal = model.get(key);
           var prevVal = model.previous(key);
-          var el = (selector.length > 0) ? self.$(selector) : $(self.el);
+          var el = self.getMatches(self.el, selector);
 
           if (_.isBoolean(newVal)) {
             if (newVal) {
@@ -139,6 +141,16 @@
     getByRole: function (role) {
       return this.$('[role="' + role + '"]')[0] ||
         ((this.el.getAttribute('role') === role && this.el) || undefined);
+    },
+
+    // ## getMatches
+    // Gets matching element from the view by selector
+    getMatches: function (el, selector) {
+      var $el = $(el);
+
+      if (selector === '') return $el;
+      if ($el.is(selector)) return $el;
+      return $(slice.call(el.querySelectorAll(selector)));
     },
 
     // Shortcut for doing everything we need to do to
